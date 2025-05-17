@@ -7,10 +7,11 @@ document.getElementById('loginForm').addEventListener('submit', function(e){
 })
 
 function login(email, password){
+    localStorage.removeItem('token')
     let message = ''
-    let alertType= ''
-    const LOGIN_ENDPOINT = 'https://reqres.in/api/login'
-    fetch(LOGIN_ENDPOINT, {
+    let alertType = ''
+    const REQRES_ENDPOINT = 'https://reqres.in/api/login'
+    fetch(REQRES_ENDPOINT, {
         method: 'POST',
         headers: {
             'Content-type': 'application/json',
@@ -19,32 +20,33 @@ function login(email, password){
         body: JSON.stringify({email, password})
     })
     .then((response) =>{
-        return response.json().then(
-            data => {
-                return {
-                    status: response.status,
-                    data: data
-                }
-            }
-        )
-    })
-    .then((result) =>{
-        if(result.status === 200){
+        if(response.status === 200){
             alertType = 'success'
             message = 'Inicio de sesión exitoso'
             alertBuilder(alertType, message)
+            response.json().then((data) => {
+                localStorage.setItem('token', data.token)
+            }) 
+            setTimeout(() =>{
+                location.href = 'admin/dashboard.html'
+            }, 2000)// 2000 ms = 2 segundos
+            
         }
         else{
             alertType = 'danger'
-            message = 'Correo o contraseña incorrectos.'
+            message = 'Correo o contraseña invalida'
             alertBuilder(alertType, message)
         }
+        console.log('respuesta del servicio', response)
+        
     })
     .catch((error) =>{
         alertType = 'danger'
-        message = 'Error inesperado '+error
+        message = 'Ocurrio un error inesperado'
+        console.log('error en el servicio', error)
         alertBuilder(alertType, message)
     })
+
 }
 
 function alertBuilder(alertType, message){
