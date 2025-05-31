@@ -1,5 +1,5 @@
 function users(page){
-    document.getElementById('cardHeader').innerHTML = '<h5>Listado de usuarios</h5>'
+    document.getElementById('cardHeader').innerHTML = '<h5><i class="fa-solid fa-users"></i> Listado de usuarios</h5>'
     const REQRES_ENDPOINT = 'https://reqres.in/api/users?page='+page
     fetch(REQRES_ENDPOINT, {
         method: 'GET',
@@ -21,6 +21,9 @@ function users(page){
     .then((result) => {
         if(result.status === 200){
             let listUsers = `
+            <button type="button" class="btn btn-outline-success" onclick="addUser()">
+                <i class="fa-solid fa-user-plus"></i>
+            </button>
                 <table class="table">
                     <thead>
                         <tr>
@@ -41,7 +44,7 @@ function users(page){
                         <td>${user.last_name}</td>
                         <td><img src="${user.avatar}" class="img-thumbnail" alt="avatar del usuario"></td>
                         <td>
-                            <button type="button" class="btn btn-outline-info" onclick="getUser('${user.id}')">Ver</button>
+                            <button type="button" class="btn btn-outline-info" onclick="getUser('${user.id}')"><i class="fa-solid fa-eye"></i></button>
                         </td>
                     </tr>
                 `  
@@ -124,6 +127,59 @@ function showModalUser(user){
                     <p class="card-text">Correo: ${user.email}</p>
                     <p class="card-text">Nombre: ${user.first_name}</p>
                     <p class="card-text">Apellido: ${user.last_name}</p>
+                </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    `
+    document.getElementById('modalUser').innerHTML = modalUser
+    const modal = new bootstrap.Modal(document.getElementById('showModalUser'))
+    modal.show()
+}
+
+function addUser(){
+    const modalUser = `
+    <!-- Modal -->
+    <div class="modal fade" id="showModalUser" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-md">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel"><i class="fa-solid fa-user-plus"></i> Agregar Usuario</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="card">
+                <div class="card-body">
+                    <form id="formAddUser">
+                        <div class="row">
+                            <div class="col">
+                                <input type="text" id="first_name" class="form-control" placeholder="Primer nombre" aria-label="First name" required>
+                            </div>
+                            <div class="col">
+                                <input type="text" id="last_name" class="form-control" placeholder="Apellidos" aria-label="Last name" required>
+                            </div>
+                        </div>
+
+                        <div class="row mt-3">
+                            <div class="col">
+                                <input type="email" id="email" class="form-control" placeholder="Correo" aria-label="First name" required>
+                            </div>
+                            <div class="col">
+                                <input type="url" id="avatar" class="form-control" placeholder="Link del avatar" aria-label="Last name" required>
+                            </div>
+                        </div>
+
+                        <div class="row mt-3 ">
+                            <div class="col text-center">
+                                <button type="button" class="btn btn-success"><i class="fa-solid fa-floppy-disk"></i> Guardar</button>
+                            </div>
+                        </div> 
+                    </form>
                 </div>
             </div>
           </div>
